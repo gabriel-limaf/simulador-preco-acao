@@ -3,9 +3,10 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-def carregar_dados(nome_arquivo, planilha):
+def carregar_dados(nome_arquivo, planilha, ticker):
     """Carrega os dados do arquivo Excel."""
-    dados = pd.DataFrame(pd.read_excel(nome_arquivo, sheet_name=planilha)).sort_values("Date")
+    df = pd.DataFrame(pd.read_excel(nome_arquivo, sheet_name=planilha))
+    dados = df[df['Ticker'] == ticker].sort_values("Date")
     return dados
 
 
@@ -41,14 +42,16 @@ def visualizar_simulacoes(simulacoes):
     plt.title('Simulação Monte Carlo para Preço Futuro da Ação')
     plt.xlabel('Dias')
     plt.ylabel('Preço da Ação')
+    plt.savefig('simulacao_monte_carlo.png')
     plt.show()
 
 
 if __name__ == "__main__":
     nome_arquivo = 'precoAcoes.xlsx'
-    planilha = 'precoAcoes'
+    planilha = 'Planilha2'
+    ticker = "PETR3"
 
-    dados = carregar_dados(nome_arquivo, planilha)
+    dados = carregar_dados(nome_arquivo, planilha, ticker)
     media_retorno, volatilidade_retorno = calcular_estatisticas_retorno(dados)
 
     preco_atual = dados['PrecoAcao'].iloc[-1]
